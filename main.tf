@@ -1,5 +1,14 @@
 resource "azuread_application" "application_registration" {
   display_name     = "${var.app_prefix}"
+  required_resource_access {
+  resource_app_id = "00000002-0000-0000-c000-000000000000"
+  resource_access {
+	id = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
+	type="Role"
+	}
+  }
+
+  
  }
  resource "azuread_service_principal" "serviceprincipal" {
   application_id = azuread_application.application_registration.application_id
@@ -15,20 +24,26 @@ resource "azurerm_role_assignment" "Attach_Readerrole" {
   role_definition_name = "Reader"
   principal_id         = azuread_service_principal.serviceprincipal.id
 }
-resource "azurerm_role_assignment" "Attach_Reader_and_DataAccess_role" {
+
+resource "azurerm_role_assignment" "Attach_Key_Vault_Readerrole" {
   scope                = data.azurerm_subscription.primary.id
-  role_definition_name = "Reader and Data Access"
+  role_definition_name = "Key Vault Reader"
   principal_id         = azuread_service_principal.serviceprincipal.id
 }
-resource "azurerm_role_definition" "Define_ReadonlyRole" {
-  name               = "${var.app_prefix}_NetworkContributor_Readerrole"
+
+resource "azurerm_role_assignment" "Attach_StorageAccountKeyOperatorServicerole" {
+  scope                = data.azurerm_subscription.primary.id
+  role_definition_name = "Storage Account Key Operator Service Role"
+  principal_id         = azuread_service_principal.serviceprincipal.id
+}
+
+resource "azurerm_role_definition" "Define_App_Service_Auth_Reader" {
+  name               = "${var.app_prefix}_AppServiceAuthReader"
   scope              = data.azurerm_subscription.primary.id
-  description        = "Read permissions for Network Contributor"
+  description        = "Read permissions for authentication/authorization data related to Azure App Service"
 
   permissions {
-    actions     = ["Microsoft.Authorization/*/read",
-    "Microsoft.ResourceHealth/availabilityStatuses/read",
-    "Microsoft.Resources/subscriptions/resourceGroups/read"
+    actions     = ["Microsoft.Web/sites/config/list/Action"
     ]
     not_actions = []
   }
@@ -37,9 +52,45 @@ resource "azurerm_role_definition" "Define_ReadonlyRole" {
     data.azurerm_subscription.primary.id,
   ]
 }
-resource "azurerm_role_assignment" "Attach_ReadonlyRole" {
+
+resource "azurerm_role_assignment" "Attach_App_Service_Auth_Reader" {
   scope                = data.azurerm_subscription.primary.id
-  role_definition_id   = azurerm_role_definition.Define_ReadonlyRole.role_definition_resource_id
+  role_definition_id   = azurerm_role_definition.Define_App_Service_Auth_Reader.role_definition_resource_id
   principal_id         = azuread_service_principal.serviceprincipal.id
 }
 
+
+resource "azurerm_key_vault_access_policy" "attach_keyvalut_policy" {
+  count = length(data.azurerm_resources.Fetch_keyvalutids.resources)
+  key_vault_id = data.azurerm_resources.Fetch_keyvalutids.resources[count.index].id
+  tenant_id    = data.azurerm_subscription.primary.tenant_id
+  object_id    = azuread_service_principal.serviceprincipal.object_id
+  
+  key_permissions = []
+
+  secret_permissions = [
+    "List",
+  ]
+  storage_permissions = []
+}
+
+
+resource "null_resource" "Credentails" {
+  provisioner "local-exec" {
+     command =<<EOF
+     cat > client_credentials.json << EOF
+{
+  "clientId": "${azuread_application.application_registration.application_id}",
+  "clientSecret": "${azuread_application_password.password_generation.value}",
+  "subscriptionId": "${data.azurerm_subscription.primary.subscription_id}",
+  "tenantId": "${data.azurerm_subscription.primary.tenant_id}",
+  "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
+  "resourceManagerEndpointUrl": "https://management.azure.com/",
+  "activeDirectoryGraphResourceId": "https://graph.windows.net/",
+  "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
+  "galleryEndpointUrl": "https://gallery.azure.com/",
+  "managementEndpointUrl": "https://management.core.windows.net/"
+}
+EOF
+  }
+}

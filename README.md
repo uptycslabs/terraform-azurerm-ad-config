@@ -1,11 +1,22 @@
 # Terraform Azure Application Registration module
-* This module allows you to Register an application with required roles and permissions and return Clientid and ClientSecret
-* This module will register an application and create Service principal with following roles attached:
+* This module allows you to Register an application with required roles and permissions and create credentials JSON file
+* This module will register an application and create Service principal with following roles and permissions attached:
   * Reader
-  * Reader and Data Access
+  * Key Vault Reader
+  * Storage Account Key Operator Service Role
   * Custom Readonly access for required resources
-  
-## 1.Create a <file.tf> file and paste below code and modify as you needed
+  * Directory.Read.All 
+  * Access Policy(Keyvault - Key & Secret Management - List Keys, Secrets)
+
+## 1.Authenticate
+```
+$ az login
+```
+If the user have more than subscriptions then set the subscription
+```
+$ az account set --subscription="SUBSCRIPTION_ID"
+```
+## 2.Create a <file.tf> file and paste below code and modify as you needed
 
 ```
 module "iam-config" {
@@ -53,7 +64,7 @@ output "ClientsecretId" {
 | ClientsecretId | Secret ID |
 
 
-## 2. Execute Terraform script to get ClientId and ClientSecret
+## 3. Execute Terraform script to get credentials JSON
 
 ```sh
 $ terraform init
