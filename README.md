@@ -1,6 +1,6 @@
 # Terraform Azure Application Registration module
-* This module allows you to Register an application with required roles and permissions and create credentials JSON file
-* This module will register an application and create Service principal with following roles and permissions attached:
+* This module allows you to register an application with required roles and permissions and create credentials JSON file
+* This module will register an application and create service principal with following roles and permissions attached:
   * Reader
   * Key Vault Reader
   * Storage Account Key Operator Service Role
@@ -12,11 +12,11 @@
 ```
 $ az login
 ```
-If the user have more than subscriptions then set the subscription
+If the user has more than one subscriptions then set the subscription
 ```
 $ az account set --subscription="SUBSCRIPTION_ID"
 ```
-## 2.Create a <file.tf> file and paste below code and modify as you needed
+## 2.Create a <file.tf> file and paste below code and modify app_prefix as you need
 
 ```
 module "iam-config" {
