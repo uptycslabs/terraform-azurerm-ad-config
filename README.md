@@ -20,16 +20,15 @@ $ az account set --subscription="SUBSCRIPTION_ID"
 
 ```
 module "iam-config" {
- source = "github.com/uptycslabs/terraform-azure-iam-config"
-
+  source     = "github.com/uptycslabs/terraform-azure-iam-config"
   app_prefix = "cloudquery"
-  }
-  
+}
+
 output "Subscriptionid" {
-value=module.iam-config.Subscription_ID
+  value = module.iam-config.Subscription_ID
 }
 output "Tenantid" {
-value=module.iam-config.Tenant_ID
+  value = module.iam-config.Tenant_ID
 }
 output "Applicationid" {
   value = module.iam-config.Application_ID
@@ -38,11 +37,11 @@ output "Objectid" {
   value = module.iam-config.Object_ID
 }
 output "ClientSecret" {
-  value = module.iam-config.Client_Secret
+  value     = module.iam-config.Client_Secret
   sensitive = true
 }
 output "ClientsecretId" {
-    value=module.iam-config.Client_Secret_ID
+  value = module.iam-config.Client_Secret_ID
 }
 ```
 
