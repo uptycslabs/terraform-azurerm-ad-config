@@ -1,11 +1,11 @@
 output "Subscription_ID" {
-value=data.azurerm_subscription.primary.subscription_id
+  value = data.azurerm_subscription.primary.subscription_id
 }
 output "Application_ID" {
   value = azuread_application.application_registration.application_id
 }
 output "Tenant_ID" {
-value=data.azurerm_subscription.primary.tenant_id
+  value = data.azurerm_subscription.primary.tenant_id
 }
 
 output "Object_ID" {
@@ -18,6 +18,6 @@ output "Client_Secret" {
 }
 
 output "Client_Secret_ID" {
-  value     = azuread_application_password.password_generation.key_id
-  
+  value = azuread_application_password.password_generation.key_id
+
 }
