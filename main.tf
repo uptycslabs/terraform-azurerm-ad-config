@@ -1,5 +1,5 @@
 resource "azuread_application" "application_registration" {
-  display_name = "${var.app_prefix}"
+  display_name = "${var.resource_prefix}"
   required_resource_access {
     resource_app_id = "00000002-0000-0000-c000-000000000000"
     resource_access {
@@ -15,7 +15,7 @@ resource "azuread_service_principal" "serviceprincipal" {
 }
 resource "azuread_application_password" "password_generation" {
   application_object_id = azuread_application.application_registration.object_id
-  end_date_relative     = "4320h" # expire in 6 months
+  end_date_relative     = "43200h"
   display_name          = "cloudquery"
 }
 
@@ -38,7 +38,7 @@ resource "azurerm_role_assignment" "Attach_StorageAccountKeyOperatorServicerole"
 }
 
 resource "azurerm_role_definition" "Define_App_Service_Auth_Reader" {
-  name        = "${var.app_prefix}_AppServiceAuthReader"
+  name        = "${var.resource_prefix}-AppServiceAuthReader"
   scope       = data.azurerm_subscription.primary.id
   description = "Read permissions for authentication/authorization data related to Azure App Service"
 
