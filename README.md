@@ -52,7 +52,8 @@ $ terraform apply
 ```
 ## Note:
 * The user should have `owner` role to create resources
-* Once terraform is applied successfully, it will create `client_credentials.json` file.
+* Once terraform is applied successfully, it will create `client_credentials.json` file and will give outputs (azure subscription id and azure subscription name)
+* The user has to paste these output values and the data in `client_credentials.json` in respective fields of uptycs UI  
 
 ## Outputs
 
