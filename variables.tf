@@ -1,5 +1,5 @@
-variable "app_prefix" {
-  description = "Pass prefix to identify Application"
+variable "resource_prefix" {
+  description = "Pass prefix to identify Application and resources"
   type        = string
-  default     = "cloudquery"
+  default     = "uptycs-cloudquery-integration-123"
 }

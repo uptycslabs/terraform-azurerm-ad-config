@@ -1,77 +1,102 @@
 # Terraform Azure Application Registration module
-* This module allows you to register an application with required roles and permissions and create credentials JSON file
-* This module will register an application and create service principal with following roles and permissions attached:
-  * Reader
-  * Key Vault Reader
-  * Storage Account Key Operator Service Role
-  * Custom Readonly access for required resources
-  * Directory.Read.All 
-  * Access Policy(Keyvault - Key & Secret Management - List Keys, Secrets)
 
-## 1.Authenticate
+## Overview
+
+* This module would help create access credentials to be used with Azure Account integration with Uptycs.
+* The user should have `owner` role to create resources
+* This terraform module will create following resources:-
+  * Application
+  * Service principal to the application
+  * It will attach the following roles and permissions to the service principal
+    * Reader
+    * Key Vault Reader
+    * Storage Account Key Operator Service Role
+    * Custom Readonly access for required resources
+    * Directory.Read.All
+    * Access Policy(Keyvault - Key & Secret Management - List Keys, Secrets)
+
+## 1. Authenticate
+
+### 1a. Login to azure
+
 ```
 $ az login
 ```
-If the user has more than one subscriptions then set the subscription
+
+### 1b. Set a subscription
+
+If the user has more than one subscription then set the subscription which you want to integrate with uptycs
+
 ```
 $ az account set --subscription="SUBSCRIPTION_ID"
 ```
-## 2.Create a <file.tf> file and paste below code and modify app_prefix as you need
+
+## 2. Steps to generate credentials
+
+### 2a. Create a directory
+
+```
+mkdir <Name of the directory>
+```
+
+### 2b. Change directory
+
+```
+cd <Name of the directory created in step 2a>
+```
+
+### 2c. Create a file with name `main.tf` and paste below code
 
 ```
 module "iam-config" {
   source     = "github.com/uptycslabs/terraform-azure-iam-config"
-  app_prefix = "cloudquery"
+
+  # modify as you need
+  resource_prefix = "uptycs-cloudquery-integration-123"
 }
 
-output "Subscriptionid" {
-  value = module.iam-config.Subscription_ID
+output "subscription_id" {
+  value = module.iam-config.subscription_id
 }
-output "Tenantid" {
-  value = module.iam-config.Tenant_ID
-}
-output "Applicationid" {
-  value = module.iam-config.Application_ID
-}
-output "Objectid" {
-  value = module.iam-config.Object_ID
-}
-output "ClientSecret" {
-  value     = module.iam-config.Client_Secret
-  sensitive = true
-}
-output "ClientsecretId" {
-  value = module.iam-config.Client_Secret_ID
+
+output "subscription_name" {
+  value = module.iam-config.subscription_name
 }
 ```
 
-## Inputs
-
-| Name | Description | Type | Default |
-| ---- | ----------- | ---- | ------- |
-| app_prefix | Prefix to be used for naming new resources | `string` | `cloudquery`|
-
-## Outputs
-
-| Name                    | Description      |
-| ----------------------- | ---------------- |
-| Subscriptionid        | Subscriptionid  |
-|  Tenantid  | TenantId |
-|  Objectid | Objectid of the Application|
-|  ClientSecret |  ClientSecret of the application |
-|  Applicationid |   ClientID of the application |
-| ClientsecretId | Secret ID |
+### Inputs
 
 
-## 3. Execute Terraform script to get credentials JSON
+| Name            | Description                                | Type     | Default                         |
+| ----------------- | -------------------------------------------- | ---------- | --------------------------------- |
+| resource_prefix | Prefix to be used for naming new resources | `string` | `uptycs-cloudquery-integration-123` |
+
+### 2d. Run Terraform
 
 ```sh
 $ terraform init
 $ terraform plan
 $ terraform apply
 ```
-## Note :
-ClientSecret can be obtained by running
-```sh
-$ terraform output ClientSecret
+
+Once terraform is applied successfully, it will create `client_credentials.json` file and will give below outputs
+
+### Outputs
+
+
+| Name              | Description                         |
+| ------------------- | ------------------------------------- |
+| subscription_id   | Subscriptionid of the Azure Account |
+| subscription_name | Name of the the azure subscription  |
+
+## 3. Enter the outputs in corresponding fields of Uptycs UI
+
+3a. In Uptycs UI, paste the values of subscription_id and subscription_name in `Azure Subscription ID` and `Azure Subscription Name` fields respectively.
+
+3b. Run this command to get credentilas
+
 ```
+cat client_credentials.json | jq
+```
+
+3c. Paste the above command's output into Access Config JSON field
