@@ -8,12 +8,12 @@
   * Application
   * Service principal to the application
   * It will attach the following roles and permissions to the service principal
-    * Reader
-    * Key Vault Reader
-    * Storage Account Key Operator Service Role
-    * Custom Readonly access for required resources
-    * Directory.Read.All
-    * Access Policy(Keyvault - Key & Secret Management - List Keys, Secrets)
+      1. Reader
+      2. Key Vault Reader
+      3. Storage Account Key Operator Service Role
+      4. Custom Readonly access for required resources
+      5. Directory.Read.All
+      6.  Access Policy(Keyvault - Key & Secret Management - List Keys, Secrets)
 
 ## 1. Authenticate
 
@@ -36,13 +36,13 @@ $ az account set --subscription="SUBSCRIPTION_ID"
 ### 2a. Create a directory
 
 ```
-mkdir <Name of the directory>
+mkdir "Name of the directory"
 ```
 
 ### 2b. Change directory
 
 ```
-cd <Name of the directory created in step 2a>
+cd "Name of the directory created in step 2a"
 ```
 
 ### 2c. Create a file with name `main.tf` and paste below code
