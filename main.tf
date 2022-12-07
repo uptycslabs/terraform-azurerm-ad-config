@@ -1,15 +1,48 @@
+resource "azuread_service_principal" "msgraph" {
+  application_id = data.azuread_application_published_app_ids.app_ids.result.MicrosoftGraph
+  use_existing   = true
+}
+
 resource "azuread_application" "application_registration" {
   display_name = "${var.resource_prefix}"
   required_resource_access {
-    resource_app_id = "00000002-0000-0000-c000-000000000000"
+    resource_app_id = data.azuread_application_published_app_ids.app_ids.result.MicrosoftGraph
     resource_access {
-      id   = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
+      id   = azuread_service_principal.msgraph.app_role_ids["Group.Read.All"]
       type = "Role"
     }
+
+    resource_access {
+      id   = azuread_service_principal.msgraph.app_role_ids["User.Read.All"]
+      type = "Role"
+    }
+
+    resource_access {
+      id   = azuread_service_principal.msgraph.app_role_ids["Directory.Read.All"]
+      type = "Role"
+    }
+
   }
-
-
 }
+
+resource "azuread_app_role_assignment" "UserReadAll" {
+  app_role_id         = azuread_service_principal.msgraph.app_role_ids["User.Read.All"]
+  principal_object_id = azuread_service_principal.serviceprincipal.object_id
+  resource_object_id  = azuread_service_principal.msgraph.object_id
+}
+
+resource "azuread_app_role_assignment" "DirectoryReadAll" {
+  app_role_id         = azuread_service_principal.msgraph.app_role_ids["Directory.Read.All"]
+  principal_object_id = azuread_service_principal.serviceprincipal.object_id
+  resource_object_id  = azuread_service_principal.msgraph.object_id
+}
+
+resource "azuread_app_role_assignment" "GroupReadAll" {
+  app_role_id         = azuread_service_principal.msgraph.app_role_ids["Group.Read.All"]
+  principal_object_id = azuread_service_principal.serviceprincipal.object_id
+  resource_object_id  = azuread_service_principal.msgraph.object_id
+}
+
 resource "azuread_service_principal" "serviceprincipal" {
   application_id = azuread_application.application_registration.application_id
 }
