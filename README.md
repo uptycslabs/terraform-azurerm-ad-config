@@ -1,29 +1,53 @@
-# Terraform Azure Application Registration module
+# Terraform Azure module - Subscription Integration for Uptycs
 
-## Overview
+This module provides the required Azure resources to integrate an Azure subscription with Uptycs.
 
-* This module would help create access credentials to be used with Azure Account integration with Uptycs.
-* The user should have `owner` role to create resources
-* This terraform module will create following resources:-
-  * Application
-  * Service principal to the application
-  * It will attach the following roles and permissions to the service principal
-      1. Reader
-      2. Key Vault Reader
-      3. Storage Account Key Operator Service Role
-      4. Custom Readonly access for required resources
-      5. Directory.Read.All
-      6.  Access Policy(Keyvault - Key & Secret Management - List Keys, Secrets)
 
-## 1. Authenticate
+It creates the following resources:
 
-### 1a. Login to azure
+* Application
+* Service principal to the application
+* It attaches the following roles and permissions to the service principal:
+
+  **Roles**:
+
+  - Reader
+  - Key Vault Reader
+  - Storage Account Key Operator Service Role
+  - Custom read-only access for required resources
+
+  **API permissions**:
+
+  - Directory.Read.All
+  - User.Read.All
+  - Group.Read.All
+
+  **Policies**:
+
+  - Key Vault Access Policy (secret_permissions : List)
+
+## Prerequisites
+
+Ensure you have the following privileges before you execute the Terraform Script:
+
+* The user should have `owner` role in subscription to create resources
+* Administrative roles:
+
+  * Application administrator
+  * Directory readers
+  * Global administrator
+
+## Authentication
+
+To authenticate Azure, use the following commands:
+
+**Login to azure**
 
 ```
 $ az login
 ```
 
-### 1b. Set a subscription
+**Set a subscription**
 
 If the user has more than one subscription then set the subscription which you want to integrate with uptycs
 
@@ -31,21 +55,13 @@ If the user has more than one subscription then set the subscription which you w
 $ az account set --subscription="SUBSCRIPTION_ID"
 ```
 
-## 2. Steps to generate credentials
+## Terraform Script
 
-### 2a. Create a directory
+To execute the Terraform script:
 
-```
-mkdir "Name of the directory"
-```
+1. **Prepare .tf file**
 
-### 2b. Change directory
-
-```
-cd "Name of the directory created in step 2a"
-```
-
-### 2c. Create a file with name `main.tf` and paste below code
+   Create a `main.tf` file in a new folder. Copy and paste the following configuration and modify as required:
 
 ```
 module "iam-config" {
@@ -64,24 +80,16 @@ output "subscription_name" {
 }
 ```
 
-### Inputs
+**Init, Plan and Apply**
+
+**Inputs**
 
 
-| Name            | Description                                | Type     | Default                         |
-| ----------------- | -------------------------------------------- | ---------- | --------------------------------- |
+| Name            | Description                                | Type     | Default                             |
+| ----------------- | -------------------------------------------- | ---------- | ------------------------------------- |
 | resource_prefix | Prefix to be used for naming new resources | `string` | `uptycs-cloudquery-integration-123` |
 
-### 2d. Run Terraform
-
-```sh
-$ terraform init
-$ terraform plan
-$ terraform apply
-```
-
-Once terraform is applied successfully, it will create `client_credentials.json` file and will give below outputs
-
-### Outputs
+**Outputs**
 
 
 | Name              | Description                         |
@@ -89,14 +97,9 @@ Once terraform is applied successfully, it will create `client_credentials.json`
 | subscription_id   | Subscriptionid of the Azure Account |
 | subscription_name | Name of the the azure subscription  |
 
-## 3. Enter the outputs in corresponding fields of Uptycs UI
-
-3a. In Uptycs UI, paste the values of subscription_id and subscription_name in `Azure Subscription ID` and `Azure Subscription Name` fields respectively.
-
-3b. Run this command to get credentilas
-
+```sh
+$ terraform init
+$ terraform plan # Please verify before applying
+$ terraform apply
+# Once terraform is applied successfully, it will create "client_credentials.json" file.
 ```
-cat client_credentials.json | jq
-```
-
-3c. Paste the above command's output into Access Config JSON field
