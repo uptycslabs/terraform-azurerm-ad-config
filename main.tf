@@ -22,6 +22,18 @@ resource "azuread_application" "application_registration" {
       type = "Role"
     }
 
+    resource_access {
+      id   = azuread_service_principal.msgraph.app_role_ids["OnPremisesPublishingProfiles.ReadWrite.All"]
+      type = "Role"
+    }
+
+    resource_access {
+      id   = azuread_service_principal.msgraph.app_role_ids["Application.Read.All"]
+      type = "Role"
+    }
+
+
+
   }
 }
 
@@ -33,6 +45,18 @@ resource "azuread_app_role_assignment" "UserReadAll" {
 
 resource "azuread_app_role_assignment" "DirectoryReadAll" {
   app_role_id         = azuread_service_principal.msgraph.app_role_ids["Directory.Read.All"]
+  principal_object_id = azuread_service_principal.serviceprincipal.object_id
+  resource_object_id  = azuread_service_principal.msgraph.object_id
+}
+
+resource "azuread_app_role_assignment" "ApplicationReadAll" {
+  app_role_id         = azuread_service_principal.msgraph.app_role_ids["Application.Read.All"]
+  principal_object_id = azuread_service_principal.serviceprincipal.object_id
+  resource_object_id  = azuread_service_principal.msgraph.object_id
+}
+
+resource "azuread_app_role_assignment" "OnPremisesPublishingProfilesReadWriteAll" {
+  app_role_id         = azuread_service_principal.msgraph.app_role_ids["OnPremisesPublishingProfiles.ReadWrite.All"]
   principal_object_id = azuread_service_principal.serviceprincipal.object_id
   resource_object_id  = azuread_service_principal.msgraph.object_id
 }

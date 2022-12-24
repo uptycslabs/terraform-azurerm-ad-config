@@ -21,6 +21,8 @@ It creates the following resources:
   - Directory.Read.All
   - User.Read.All
   - Group.Read.All
+  - Application.Read.All
+  - OnPremisesPublishingProfiles.ReadWrite.All
 
   **Policies**:
 
@@ -32,9 +34,6 @@ Ensure you have the following privileges before you execute the Terraform Script
 
 * The user should have `owner` role in subscription to create resources
 * Administrative roles:
-
-  * Application administrator
-  * Directory readers
   * Global administrator
 
 ## Authentication
