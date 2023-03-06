@@ -64,10 +64,17 @@ To execute the Terraform script:
 
 ```
 module "iam-config" {
-  source     = "github.com/uptycslabs/terraform-azure-iam-config"
+  source     = "github.com/uptycslabs/terraform-azurerm-ad-config"
 
   # modify as you need
   resource_prefix = "uptycs-cloudquery-integration-123"
+  
+  # Find the client_id on Azure Integration page of Uptycs Web
+  uptycs_app_client_id = "Client ID from Azure Integration page"
+  
+  # If you are integrating a subscription for the first time, set the value to false. 
+  # For the second or multiple subscription integrations in the same tenant, set the value to true.
+  use_existing_service_principal = false
 }
 
 output "subscription_id" {
@@ -86,7 +93,9 @@ output "subscription_name" {
 
 | Name            | Description                                | Type     | Default                             |
 | ----------------- | -------------------------------------------- | ---------- | ------------------------------------- |
-| resource_prefix | Prefix to be used for naming new resources | `string` | `uptycs-cloudquery-integration-123` |
+| resource_prefix | Prefix to be used for naming new resources | `string` | `uptycs-integration-123` |
+| uptycs_app_client_id | The Client ID of Uptycs Multi-tenant app | `string` | required |
+| use_existing_service_principal | Whether to create a new service princial or use existing one | `boolean` | required |
 
 **Outputs**
 
@@ -97,8 +106,8 @@ output "subscription_name" {
 | subscription_name | Name of the the azure subscription  |
 
 ```sh
-$ terraform init
+$ terraform init --upgrade
 $ terraform plan # Please verify before applying
 $ terraform apply
-# Once terraform is applied successfully, it will create "client_credentials.json" file.
+# Wait until successfully completed
 ```
