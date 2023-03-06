@@ -64,7 +64,7 @@ To execute the Terraform script:
 
 ```
 module "iam-config" {
-  source     = "github.com/uptycslabs/terraform-azurearm-ad-config"
+  source     = "github.com/uptycslabs/terraform-azurerm-ad-config"
 
   # modify as you need
   resource_prefix = "uptycs-cloudquery-integration-123"
