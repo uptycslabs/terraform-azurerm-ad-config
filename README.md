@@ -23,6 +23,8 @@ It creates the following resources:
   - Group.Read.All
   - Application.Read.All
   - OnPremisesPublishingProfiles.ReadWrite.All
+  - Organization.Read.All
+  - AuditLog.Read.All
 
   **Policies**:
 
