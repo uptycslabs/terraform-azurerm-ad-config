@@ -28,7 +28,7 @@ It creates the following resources:
 
   **Policies**:
 
-  - Key Vault Access Policy (secret_permissions : List, certificate_permissions : List)
+  - Key Vault Access Policy (certificate_permissions : List, Get)
 
 ## Prerequisites
 
