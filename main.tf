@@ -110,9 +110,7 @@ resource "azurerm_key_vault_access_policy" "attach_keyvalut_policy" {
 
   key_permissions = []
 
-  secret_permissions = [
-    "List",
-  ]
+  secret_permissions = []
   certificate_permissions = [
     "List",
     "Get"
