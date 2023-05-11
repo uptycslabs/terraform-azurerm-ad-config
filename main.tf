@@ -67,6 +67,14 @@ resource "azurerm_role_assignment" "attach_reader_role" {
   role_definition_name = "Reader"
 }
 
+# Give the service principal a Storage Blob Data Reader role in the Subscription
+resource "azurerm_role_assignment" "storage_blob_data_reader_role" {
+  principal_id         = azuread_service_principal.service_principal.id
+  scope                = data.azurerm_subscription.primary.id
+  role_definition_name = "Allows for read access to Azure Storage blob containers and data"
+}
+
+
 resource "azurerm_role_assignment" "Attach_Key_Vault_Readerrole" {
   scope                = data.azurerm_subscription.primary.id
   role_definition_name = "Key Vault Reader"
