@@ -60,6 +60,13 @@ resource "azuread_app_role_assignment" "audit_log_reader_role" {
   resource_object_id  = azuread_service_principal.msgraph.object_id
 }
 
+resource "azuread_app_role_assignment" "policy_reader_role" {
+  count = var.use_existing_service_principal ? 0 : 1
+  app_role_id         = azuread_service_principal.msgraph.app_role_ids["Policy.Read.All"]
+  principal_object_id = azuread_service_principal.service_principal.object_id
+  resource_object_id  = azuread_service_principal.msgraph.object_id
+}
+
 # Give the service principal a Reader role in the Subscription
 resource "azurerm_role_assignment" "attach_reader_role" {
   principal_id         = azuread_service_principal.service_principal.id
