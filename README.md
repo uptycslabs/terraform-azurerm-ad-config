@@ -13,6 +13,7 @@ It creates the following resources:
 
   - Reader
   - Key Vault Reader
+  - Storage Blob Data Reader
   - Storage Account Key Operator Service Role
   - Custom read-only access for required resources
 
