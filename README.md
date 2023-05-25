@@ -26,6 +26,7 @@ It creates the following resources:
   - OnPremisesPublishingProfiles.ReadWrite.All
   - Organization.Read.All
   - AuditLog.Read.All
+  - Policy.Read.All
 
   **Policies**:
 
