@@ -25,7 +25,7 @@ It creates the following resources:
   - Application.Read.All
   - OnPremisesPublishingProfiles.ReadWrite.All
   - Organization.Read.All
-  - AuditLog.Read.All
+  - UserAuthenticationMethod.Read.All
   - Policy.Read.All
 
   **Policies**:
