@@ -11,12 +11,11 @@ Ensure you have the following privileges before you execute the Terraform Script
   - `Application Administrator` (AD Role)
 - `Owner` role at the subscription scope which is being integrated
 
-Absence of the above privileges will result in Access related issues when trying to run the Terraform.
+Absence of the above privileges may result in Access related issues when trying to run the Terraform.
 
 ## What does the Terraform do?
 
-Terraform is going to create a new <u>**Service Principal**</u> corresponding to our Multi-Tenant App Registration and assign below Roles/Permissions/Policies to it at the scope of the Subscription which is being integrated. Uptycs requires these set of Roles/Permissions to be able to fetch the required information from your Tenant:
-It creates the following resources:
+Terraform is going to create a new **Service Principal** corresponding to our Multi-Tenant App Registration and assign below Roles/Permissions/Policies to it at the scope of the Subscription which is being integrated. Uptycs requires these set of Roles/Permissions to be able to fetch the required information from your Tenant:
 
 **Roles**:
 
@@ -37,7 +36,7 @@ It creates the following resources:
 - UserAuthenticationMethod.Read.All
 - Policy.Read.All
 
-**Policies**:
+**Policy**:
 
 - Key Vault Access Policy (certificate_permissions : List, Get)
 
@@ -103,6 +102,8 @@ output "subscription_name" {
 
 **IMPORTANT NOTE:** If you have already integrated another subscription individually from the same Azure Tenant, then change the value of `use_existing_service_principal` to `true` in the above Terraform script before executing it. The Terraform will re-use the same Service Principal in that case.
 
+Execute the below commands in your terminal:
+
 ```sh
 $ terraform init --upgrade
 $ terraform plan # Please verify before applying
@@ -111,6 +112,8 @@ $ terraform apply
 ```
 
 ### 3. Outputs
+
+After running the Terraform, the following outputs are generated, which you need to add in the Uptycs Integration Page along with your Azure Tenant ID:
 
 | Name              | Description                          |
 | ----------------- | ------------------------------------ |
