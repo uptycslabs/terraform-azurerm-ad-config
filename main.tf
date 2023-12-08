@@ -1,67 +1,67 @@
 # Get MSGraph App
 resource "azuread_service_principal" "msgraph" {
-  application_id = data.azuread_application_published_app_ids.well_known.result.MicrosoftGraph
-  use_existing   = true
+  client_id    = data.azuread_application_published_app_ids.well_known.result.MicrosoftGraph
+  use_existing = true
 }
 
 # Create a service principal for the Uptycs App 
 resource "azuread_service_principal" "service_principal" {
-  application_id = var.uptycs_app_client_id
-  use_existing   = true
+  client_id    = var.uptycs_app_client_id
+  use_existing = true
 }
 
 # Create Graph API related permissions to the service principal
 resource "azuread_app_role_assignment" "application_reader_role" {
-  count = var.use_existing_service_principal ? 0 : 1
+  count               = var.use_existing_service_principal ? 0 : 1
   app_role_id         = azuread_service_principal.msgraph.app_role_ids["Application.Read.All"]
   principal_object_id = azuread_service_principal.service_principal.object_id
   resource_object_id  = azuread_service_principal.msgraph.object_id
 }
 
 resource "azuread_app_role_assignment" "user_reader_role" {
-  count = var.use_existing_service_principal ? 0 : 1
+  count               = var.use_existing_service_principal ? 0 : 1
   app_role_id         = azuread_service_principal.msgraph.app_role_ids["User.Read.All"]
   principal_object_id = azuread_service_principal.service_principal.object_id
   resource_object_id  = azuread_service_principal.msgraph.object_id
 }
 
 resource "azuread_app_role_assignment" "directory_reader_role" {
-  count = var.use_existing_service_principal ? 0 : 1
+  count               = var.use_existing_service_principal ? 0 : 1
   app_role_id         = azuread_service_principal.msgraph.app_role_ids["Directory.Read.All"]
   principal_object_id = azuread_service_principal.service_principal.object_id
   resource_object_id  = azuread_service_principal.msgraph.object_id
 }
 
 resource "azuread_app_role_assignment" "organization_reader_role" {
-  count = var.use_existing_service_principal ? 0 : 1
+  count               = var.use_existing_service_principal ? 0 : 1
   app_role_id         = azuread_service_principal.msgraph.app_role_ids["Organization.Read.All"]
   principal_object_id = azuread_service_principal.service_principal.object_id
   resource_object_id  = azuread_service_principal.msgraph.object_id
 }
 
 resource "azuread_app_role_assignment" "group_reader_role" {
-  count = var.use_existing_service_principal ? 0 : 1
+  count               = var.use_existing_service_principal ? 0 : 1
   app_role_id         = azuread_service_principal.msgraph.app_role_ids["Group.Read.All"]
   principal_object_id = azuread_service_principal.service_principal.object_id
   resource_object_id  = azuread_service_principal.msgraph.object_id
 }
 
 resource "azuread_app_role_assignment" "on_premises_publishing_profiles_reader_role" {
-  count = var.use_existing_service_principal ? 0 : 1
+  count               = var.use_existing_service_principal ? 0 : 1
   app_role_id         = azuread_service_principal.msgraph.app_role_ids["OnPremisesPublishingProfiles.ReadWrite.All"]
   principal_object_id = azuread_service_principal.service_principal.object_id
   resource_object_id  = azuread_service_principal.msgraph.object_id
 }
 
 resource "azuread_app_role_assignment" "user_authentication_methods_reader_role" {
-  count = var.use_existing_service_principal ? 0 : 1
+  count               = var.use_existing_service_principal ? 0 : 1
   app_role_id         = azuread_service_principal.msgraph.app_role_ids["UserAuthenticationMethod.Read.All"]
   principal_object_id = azuread_service_principal.service_principal.object_id
   resource_object_id  = azuread_service_principal.msgraph.object_id
 }
 
 resource "azuread_app_role_assignment" "policy_reader_role" {
-  count = var.use_existing_service_principal ? 0 : 1
+  count               = var.use_existing_service_principal ? 0 : 1
   app_role_id         = azuread_service_principal.msgraph.app_role_ids["Policy.Read.All"]
   principal_object_id = azuread_service_principal.service_principal.object_id
   resource_object_id  = azuread_service_principal.msgraph.object_id
