@@ -81,6 +81,12 @@ resource "azurerm_role_assignment" "storage_blob_data_reader_role" {
   role_definition_name = "Storage Blob Data Reader"
 }
 
+# Give the service principal a Azure Event Hubs Data Receiver role in the Subscription
+resource "azurerm_role_assignment" "azure_event_hubs_data_receiver_role" {
+  principal_id         = azuread_service_principal.service_principal.id
+  scope                = data.azurerm_subscription.primary.id
+  role_definition_name = "Azure Event Hubs Data Receiver"
+}
 
 resource "azurerm_role_assignment" "Attach_Key_Vault_Readerrole" {
   scope                = data.azurerm_subscription.primary.id
