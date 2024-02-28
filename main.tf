@@ -94,12 +94,6 @@ resource "azurerm_role_assignment" "Attach_Key_Vault_Readerrole" {
   principal_id         = azuread_service_principal.service_principal.id
 }
 
-resource "azurerm_role_assignment" "Attach_StorageAccountKeyOperatorServicerole" {
-  scope                = data.azurerm_subscription.primary.id
-  role_definition_name = "Storage Account Key Operator Service Role"
-  principal_id         = azuread_service_principal.service_principal.id
-}
-
 resource "azurerm_role_definition" "Define_App_Service_Auth_Reader" {
   name        = "${var.resource_prefix}-AppServiceAuthReader"
   scope       = data.azurerm_subscription.primary.id
