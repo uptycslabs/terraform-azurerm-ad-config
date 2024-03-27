@@ -23,7 +23,6 @@ Running the Terraform creates a new **Service Principal** corresponding to Uptyc
 - Key Vault Reader
 - Storage Blob Data Reader
 - Azure Event Hubs Data Receiver
-- Storage Account Key Operator Service Role
 - Custom read-only access for required resources
 
 **API permissions**:
